@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StockVision Pro</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  background: linear-gradient(-45deg, #0f2027, #203a43, #000);
+  color: #fff;
+}
+
+.sidebar {
+  width: 120px;
+  background: rgba(20,30,50,0.8);
+  padding: 10px;
+  height: 100vh;
+  position: fixed;
+}
+
+.menu-toggle {
+  cursor: pointer;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.hidden-menu { display: none; }
+.hidden-menu.show { display: block; }
+
+.main {
+  margin-left: 120px;
+  padding: 20px;
+  width: calc(100% - 120px);
+}
+
+.card {
+  background: rgba(255,255,255,0.05);
+  padding: 20px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+  gap: 20px;
+}
+
+.btn {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.buy { background: #00f5a0; }
+.sell { background: red; color: white; }
+.hold { background: yellow; }
+
+.quote-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#actionMsg {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #00f5a0;
+}
+
+.ticker {
+  position: fixed;
+  bottom: 0;
+  left: 120px;
+  width: calc(100% - 120px);
+  background: black;
+  padding: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <h3>StockVision</h3>
+  <div class="menu-toggle" id="menuToggle">☰</div>
+  <ul id="sidebarMenu" class="hidden-menu">
+    <li>Dashboard</li>
+    <li>Watchlist</li>
+    <li>Portfolio</li>
+  </ul>
+</div>
+
+<!-- Ticker -->
+<div class="ticker" id="ticker">Loading...</div>
+
+<!-- Main -->
+<div class="main">
+
+  <div class="grid">
+
+    <div class="card">
+      <h4>Chart</h4>
+      <canvas id="stockChart"></canvas>
+    </div>
+
+    <div class="card">
+      <h4>Prediction</h4>
+      <button class="btn buy">BUY</button>
+      <button class="btn sell">SELL</button>
+      <button class="btn hold">HOLD</button>
+
+      <!-- ✅ Action message -->
+      <p id="actionMsg"></p>
+    </div>
+
+  </div>
+
+  <!-- Quotes -->
+  <div class="quote-container">
+    <h3 id="quote">Loading quote...</h3>
+  </div>
+
+</div>
+
+<script>
+
+// Sidebar
+document.getElementById("menuToggle").addEventListener("click", () => {
+  document.getElementById("sidebarMenu").classList.toggle("show");
+});
+
+// Chart
+const stockData = [
+  {date: "Mon", price: 100},
+  {date: "Tue", price: 120},
+  {date: "Wed", price: 110},
+  {date: "Thu", price: 140}
+];
+
+const ctx = document.getElementById("stockChart").getContext("2d");
+
+new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: stockData.map(x => x.date),
+    datasets: [{
+      label: "Stock Price",
+      data: stockData.map(x => x.price),
+      borderWidth: 2,
+      fill: true
+    }]
+  }
+});
+
+// ✅ Buttons WITHOUT popup
+const msg = document.getElementById("actionMsg");
+
+document.querySelector(".buy").onclick = () => {
+  msg.innerText = "You selected BUY 📈";
+};
+
+document.querySelector(".sell").onclick = () => {
+  msg.innerText = "You selected SELL 📉";
+};
+
+document.querySelector(".hold").onclick = () => {
+  msg.innerText = "You selected HOLD ⏳";
+};
+
+// Quotes
+const quotes = [
+  "📈 The trend is your friend",
+  "💰 Buy low, sell high",
+  "⚡ Volatility creates opportunity",
+  "📊 Data beats emotions"
+];
+
+let i = 0;
+setInterval(() => {
+  document.getElementById("quote").innerText = quotes[i];
+  i = (i + 1) % quotes.length;
+}, 2000);
+
+// Ticker
+const tickerData = ["AAPL 150", "TSLA 700", "MSFT 300"];
+
+let t = 0;
+setInterval(() => {
+  document.getElementById("ticker").innerText = tickerData[t];
+  t = (t + 1) % tickerData.length;
+}, 2000);
+
+</script>
+
+</body>
+</html>
+
+
+
+
